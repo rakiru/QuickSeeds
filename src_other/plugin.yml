@@ -1,4 +1,8 @@
 name: QuickSeeds
 main: com.fuckingwin.bukkit.rakiru.QuickSeeds.QuickSeedsPlugin
-version: 0.1
+version: 0.1.3
 description: Plant seeds quicker. More time to tend to your animals.
+commands:
+  quickseeds:
+    description: Quickseeds commands
+    usage: "Usage: /quickseeds for available commands"

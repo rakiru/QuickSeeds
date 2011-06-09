@@ -32,23 +32,24 @@ public class QuickSeedsBlockListener extends BlockListener {
         Block block = event.getBlock();
         // If player planted seeds and has more seeds
         if (block.getType() == Material.CROPS && player.getInventory().contains(Material.SEEDS,8)) {
+            // stores how many seeds are used and thus need to be removed from the inventory
+            int seeds = 0;
             // Loop around the 8 bordering blocks
             for (int x = -1; x < 2; x++) {
                 for (int z = -1; z < 2; z++) {
-                    if (x != 0 && z != 0) {
+                    if (x != 0 || z != 0) {
                         Block neighbour = block.getRelative(x, 0, z);
                         Block neighbourBelow = neighbour.getRelative(BlockFace.DOWN);
                         if (neighbourBelow.getType() == Material.SOIL && neighbour.getType() == Material.AIR) {
                             if (player.getInventory().contains(Material.SEEDS)) {
                                 neighbour.setType(Material.CROPS);
-                                player.getInventory().remove(new ItemStack(Material.SEEDS, 1));
+                                seeds++;
                             }
                         }
                     }
                 }
-
             }
-
+            player.getInventory().remove(new ItemStack(Material.SEEDS, seeds));
         }
     }
 }

@@ -50,6 +50,25 @@ public class QuickSeedsBlockListener extends BlockListener {
                 }
             }
             player.getInventory().remove(new ItemStack(Material.SEEDS, seeds));
+            removeItems(player, Material.SEEDS, seeds);
+        }
+    }
+
+    public void removeItems(Player player, Material material, int amount) {
+        int remaining = amount;
+        int stackSize;
+        int slot;
+        while (remaining > 0) {
+            slot = player.getInventory().first(material);
+            stackSize = player.getInventory().getItem(slot).getAmount();
+            if (stackSize < remaining) {
+                player.getInventory().clear(slot);
+                remaining-=stackSize;
+            } else {
+                ItemStack stack = player.getInventory().getItem(slot);
+                stack.setAmount(stackSize-remaining);
+                player.getInventory().setItem(slot, stack);
+            }
         }
     }
 }

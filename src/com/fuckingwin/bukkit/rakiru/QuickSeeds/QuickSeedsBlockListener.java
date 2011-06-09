@@ -33,7 +33,7 @@ public class QuickSeedsBlockListener extends BlockListener {
         // If player planted seeds and has more seeds
         if (block.getType() == Material.CROPS && player.getInventory().contains(Material.SEEDS,8)) {
             // stores how many seeds are used and thus need to be removed from the inventory
-            int seeds = 0;
+            int seeds = 1;
             // Loop around the 8 bordering blocks
             for (int x = -1; x < 2; x++) {
                 for (int z = -1; z < 2; z++) {
@@ -49,26 +49,31 @@ public class QuickSeedsBlockListener extends BlockListener {
                     }
                 }
             }
-            player.getInventory().remove(new ItemStack(Material.SEEDS, seeds));
             removeItems(player, Material.SEEDS, seeds);
         }
     }
 
     public void removeItems(Player player, Material material, int amount) {
+         plugin.log.debug("Amount to remove: " + Integer.toString(amount));
         int remaining = amount;
         int stackSize;
         int slot;
         while (remaining > 0) {
             slot = player.getInventory().first(material);
             stackSize = player.getInventory().getItem(slot).getAmount();
-            if (stackSize < remaining) {
+            plugin.log.debug("Stack size: " + Integer.toString(stackSize));
+            if (stackSize <= remaining) {
                 player.getInventory().clear(slot);
                 remaining-=stackSize;
             } else {
                 ItemStack stack = player.getInventory().getItem(slot);
-                stack.setAmount(stackSize-remaining);
+                int newStackSize = stackSize-remaining;
+                plugin.log.debug("New stack size: " + Integer.toString(newStackSize));
+                stack.setAmount(newStackSize);
                 player.getInventory().setItem(slot, stack);
+                remaining = 0;
             }
         }
+        player.updateInventory();
     }
 }
